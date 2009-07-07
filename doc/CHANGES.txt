@@ -1,0 +1,90 @@
+0.9.7.3 -> 0.9.7.4
+------------------
+
+ - separated the example command line player from the player API. A fairly
+   complete and usable player API can now be found in
+   anakata.modplay.Player, with an asynchrounus version in
+   anakata.modplay.ThreadedPlayer.
+ - the standard example command-line player has been moved to
+   anakata.modplay.example.cli.Player.
+ - fixed the "noint" (no interpolation) command line option for the
+   standard command line player.
+ - added several simple examples:
+   o anakata.modplay.example.cli.SimplePlayer: very simple and well
+     documented example player. This is probably the first place you want
+     to look if you want to create your own player.
+   o anakata.modplay.example.cli.SimpleThreadedPlayer: same as above, but
+     using the asynchrounus version of the player API.
+   o anakata.modplay.example.applet.AppletPlayer: An example of playing
+     modules from an applet.
+   o anakata.modplay.example.applet.ThreadedAppletPlayer: same as above but
+     using the asynchrounus player API.
+ - various javadoc improvements
+
+0.9.7.2 -> 0.9.7.3
+------------------
+
+- added (fake) ascii scopes and better looking command-line output
+- added ability to load an applet from an url, making it possible to use it
+  in an applet
+- quite a few stability fixes.
+- some S3M fixes. it's still not particularly good though...
+- fixes bad key-off handling in XMs
+- fixed a off-by-one error causing the wrong sample to be played in
+  multi-sample XM instruments.
+- clip, don't overflow, when amplification is turned up to much
+- there is some experimental GUI code in cvs too... check out the V_0_9_7_3
+  tag if you're adventurous.
+
+0.9.7.1 -> 0.9.7.2
+---------------
+
+- Don't crash if effects are applied to an undefined instrument
+
+0.9.7.0 -> 0.9.7.1
+---------------
+
+- Support XMs with more than one sample per instrument
+- Don't crash if an undefined instrument is played
+- Fixed a nasty mixer bug. The left and right channel was out
+  of sync...
+
+0.96 -> 0.9.7.0
+---------------
+
+Added S3M support! :) It's still experimental though.
+
+Changed version numbering scheme: major.minor.micro.nano
+
+0.95 -> 0.96
+------------
+
+Made interpolated mixing work. Mixing is now handled by plugins and mixers
+with higer order interpolation should be easy to implement. The command line
+option "noint" can be used if you want to use a faster (crappier)
+interpolation algorithm.
+
+Reworked the output plugin interface. The player now always work at 44100Hz,
+16 bits, stereo. It's up to the output plugin to resample if a lower quality
+is needed. This simplifies the player code but means that there is no
+performance gain in decreasing the sound quality.
+
+Wav output plugin added. Supports only 44100Hz, 16 bits stereo. Use the
+"wav" command line option.
+
+Version number increased :-)
+
+Bugfix: KeyOff resulted in sample being cut.
+
+Reorganized the distribution:
+ -All files distributed in one archive.
+ -Added build.xml for building using ant.
+ -Added this file :-)
+
+Lots of smaller code cleanups.
+
+0.90 -> 0.95
+------------
+
+see:
+http://ana-mp.sourceforge.net

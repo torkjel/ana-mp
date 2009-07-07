@@ -1,0 +1,24 @@
+
+Installation instructions
+-------------------------
+
+ANA-MP come with all the classes already compiled and a jar file
+(bin/ana-mp-<version>.jar). Put this jar file anywhere you want and make sure
+your CLASSPATH environment variable points to it.
+
+In windows run:
+    set CLASSPATH=c:\some\path\ana-mp-0.9.7.4.jar;%CLASSPATH%
+In unix/linux run (assuming your're using bash):
+    export CLASSPATH=some/path/ana-mp-0.9.7.4.jar:$CLASSPATH
+
+Test that it is working by running:
+    java -jar some\path\ana-mp-0.9.7.4.jar some\mod\file.mod
+or
+    java anakata.modplay.example.cli.Player some\mod\file.mod
+
+
+Compiling the sources
+---------------------
+
+If you're considering compiling the sources, you probably already know how to
+do it :-) Tip: There is a build.xml file for you if you have ant installed.

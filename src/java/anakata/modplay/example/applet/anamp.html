@@ -1,0 +1,40 @@
+
+<!--
+
+    Usage instructions:
+
+    - (optional) compile ana-mp with "ant clean dist"
+    - copy this file into the root of your ana-mp directory
+    - run the command "appletviewer anamp.html"
+    - listen :)
+
+-->
+
+<html>
+    <head>
+        <title>ANA-MP Applet Example</title>
+    </head>
+    <body>
+        <center>
+            <applet code="anakata.modplay.example.applet.AppletPlayer"
+                    archive="bin/ana-mp-0.9.7.4.jar"
+                    width="250"
+                    height="50">
+
+                <!-- parameters for appletviewer invocation -->
+                <param name="protocol" value="file">
+                <!-- <param name="host" value=""> -->
+                <param name="port" value="-1">
+                <param name="files" value="kkowboy.xm,dope.mod">
+
+            </applet>
+        </center>
+    </body>
+</html>
+
+<!-- parameters for applet running on a webpage
+<param name="protocol" value="http">
+<param name="host" value="www.example.com">
+<param name="port" value="80">
+<param name="files" value="/modules/mymodule.mod,/modules/anothermodule.xm">
+-->

@@ -1,0 +1,139 @@
+<project name="ana-mp" default="all" basedir=".">
+
+    <description>
+       ana-mp
+    </description>
+
+<!--
+    Uncomment these to build experimental gui code and the audiodiff utility
+    <property name="enable.gui" value=""/>
+    <property name="enable.audiodiff" value=""/>
+-->
+
+    <property name="version" value="0.9.7.5"/>
+    <property name="src" location="${basedir}/src/java"/>
+    <property name="bin" location="${basedir}/bin"/>
+    <property name="doc" location="${basedir}/doc/"/>
+    <property name="jdoc" location="${doc}/javadoc"/>
+    <property name="build" location="${basedir}/build"/>
+    <property name="jarName" value="ana-mp-${version}.jar"/>
+    <property name="manifest" location="${src}/../jar/MANIFEST.txt"/>
+
+    <property name="distFile.gz" location="ana-mp-${version}.tar.gz"/>
+    <property name="distFile.bz2" location="ana-mp-${version}.tar.bz2"/>
+    <property name="distFile.zip" location="ana-mp-${version}.zip"/>
+
+    <target name="all" depends="clean, init, dist"/>
+
+    <!-- initialization-->
+
+    <target name="init">
+    </target>
+
+    <!-- create distribution -->
+
+    <target name="dist" depends="init, jar, jdoc">
+        <mkdir dir="${build}/ana-mp-${version}"/>
+        <copy todir="${build}/ana-mp-${version}">
+            <fileset dir=".">
+                <include name="**/*"/>
+                <exclude name="build/**"/>
+                <exclude name="classes/**"/>
+                <exclude name="**/gui/**" unless="enable.gui"/>
+                <exclude name="**/skin/**" unless="enable.gui"/>
+                <exclude name="**/audiodiff/**" unless="enable.audiodiff"/>
+            </fileset>
+        </copy>
+
+        <tar destfile="${distFile.gz}" compression="gzip">
+            <tarfileset dir="${build}">
+                <include name="ana-mp-${version}/**"/>
+                <exclude name="ana-mp-${version}/.*"/>
+            </tarfileset>
+        </tar>
+
+        <tar destfile="${distFile.bz2}" compression="bzip2">
+            <tarfileset dir="${build}">
+                <include name="ana-mp-${version}/**"/>
+                <exclude name="ana-mp-${version}/.*"/>
+            </tarfileset>
+        </tar>
+
+        <zip destfile="${distFile.zip}">
+            <zipfileset dir="${build}">
+                <include name="ana-mp-${version}/**"/>
+                <exclude name="ana-mp-${version}/.*"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+
+    <!-- used by the jar target to copy gui skin data -->
+    <target name="copy-skins" if="enable.gui">
+        <copy todir="${build}">
+            <fileset dir=".">
+                <include name="data/**"/>
+            </fileset>
+         </copy>
+    </target>
+
+    <!-- used by the jar target to remove gui code -->
+    <target name="delete-gui" unless="enable.gui">
+        <delete includeemptydirs="yes" failonerror="no">
+            <fileset dir="${build}" includes="**/gui/**"/>
+        </delete>
+    </target>
+
+    <!-- used by the jar target to remove the audiodiff util -->
+    <target name="delete-audiodiff" unless="enable.audiodiff">
+        <delete includeemptydirs="yes" failonerror="no">
+            <fileset dir="${build}" includes="**/audiodiff/**"/>
+        </delete>
+    </target>
+
+
+    <!-- jaring -->
+
+    <target name="jar" depends="init, compile, copy-skins, delete-gui, delete-audiodiff">
+
+        <jar destfile="${build}/${jarName}" basedir="${build}" manifest="${manifest}">
+            <fileset dir="${build}">
+                <include name="${build}/anakata/**"/>
+                <include name="${build}/data/**"/>
+            </fileset>
+        </jar>
+        <mkdir dir="${bin}"/>
+        <copy file="${build}/${jarName}" todir="${bin}"/>
+    </target>
+
+    <!-- compiling -->
+
+    <target name="compile" depends="init">
+        <mkdir dir="${build}"/>
+        <javac srcdir="${src}" destdir="${build}" debug="on"/>
+    </target>
+
+    <!-- javaDoc -->
+
+    <target name="jdoc" depends="init">
+        <javadoc classpath="${bin}/${jarName}" destdir="${jdoc}">
+            <packageset dir="${src}">
+                  <include name="**/*" />
+            </packageset>
+        </javadoc>
+    </target>
+
+    <!-- cleanup -->
+
+    <target name="clean" depends="init">
+        <delete file="${distFile.gz}"/>
+        <delete file="${distFile.bz2}"/>
+        <delete file="${distFile.zip}"/>
+        <delete includeemptydirs="yes" failonerror="no">
+            <fileset dir="${build}" includes="**" />
+            <fileset dir="${bin}" includes="**"/>
+            <fileset dir="${jdoc}" includes="**"/>
+        </delete>
+    </target>
+
+</project>
