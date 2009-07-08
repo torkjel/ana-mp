@@ -11,7 +11,7 @@ import anakata.util.Logger;
 import anakata.util.Util;
 
 /**
- * Makes it possible to load a module from a .XM file
+ * Makes it possible to load a module from an .XM file
  *
  * @author torkjel
  */
@@ -33,21 +33,21 @@ public class XMLoader extends ModuleLoader {
         int vMinor = dis.readByte();
         int vMajor = dis.readByte();
         if (vMajor != 1 || vMinor < 4)
-        	throw new InvalidFormatException("Unknown version: " + vMajor + "." + vMinor);
-        int headerSize = Util.readLEInt(dis);
+            throw new InvalidFormatException("Unknown version: " + vMajor + "." + vMinor);
+        Util.readLEInt(dis); // header size, unused?
         int numOrders = Util.readLEShort(dis);
         int restart = Util.readLEShort(dis);
         int numChannels = Util.readLEShort(dis);
         int numPatterns = Util.readLEShort(dis);
         int numInstruments = Util.readLEShort(dis);
-        int flags = Util.readLEShort(dis);
+        Util.readLEShort(dis); // flags, (bit 0: linear/amiga freq table.
         int tempo = Util.readLEShort(dis);
         if (tempo == 0) tempo = 1; // just in case...
         int BPM = Util.readLEShort(dis);
         int[] patternOrderTab = new int[numOrders];
         for (int n = 0; n < numOrders; n++)
             patternOrderTab[n] = (int) dis.readByte() & 0x0ff;
-        skip(dis,256 - numOrders);
+        skip(dis, 256 - numOrders);
 
         Instrument[] instruments = loadInstruments(fileData, numInstruments);
 
@@ -123,7 +123,7 @@ public class XMLoader extends ModuleLoader {
         for (int n = 0; n < numInstruments; n++) {
             int instSize = Util.readLEInt(dis);
             String name = Util.readZeroPaddedString(dis, 22);
-            int type = dis.readByte();
+            dis.readByte(); // instrument type, always 0
             int numSamples = Util.readLEShort(dis);
             int[] note2sample = null;
             AutoEffect[] autoEffects = null;
@@ -198,7 +198,7 @@ public class XMLoader extends ModuleLoader {
                 int p = (dis.readByte() & 0x0ff) - 128;
                 double panning = ((p / 128.0) + 1) / 2; // [0 - 255]
                 int relNote = dis.readByte(); // signed
-                int reserved = dis.readByte(); // reserved...
+                dis.readByte(); // unused reserved byte
                 String sampleName = Util.readZeroPaddedString(dis, 22);
                 int loopType = Sample.NO_LOOP;
                 if ((sampleType & 0x03) == 0 || loopLen == 0)
@@ -219,8 +219,8 @@ public class XMLoader extends ModuleLoader {
                 //relNote + " " +reserved + " " + fineTune + " " + sampleType +
                 // " " + panning + " " + p);
                 samples[m] = new Sample("sample-" + n + "-" + m, sampleName, volume,
-						panning, sampleLen, loopType, loopStart, loopLen,
-						relNote, fineTune, xmUnits);
+                        panning, sampleLen, loopType, loopStart, loopLen,
+                        relNote, fineTune, xmUnits);
             }
             for (int m = 0; m < numSamples; m++) // sample data
             {
@@ -258,8 +258,8 @@ public class XMLoader extends ModuleLoader {
         Instrument[] instruments, int patternNum)
         throws InvalidFormatException, IOException {
 
-        int headerLen = Util.readLEInt(dis);
-        int packingType = dis.readByte();
+        Util.readLEInt(dis); // header lenght?
+        dis.readByte(); // pattern packing type, unused?
         int numRows = Util.readLEShort(dis);
         int packedSize = Util.readLEShort(dis);
 

@@ -20,7 +20,7 @@ public class StandardWaveModel implements IWaveModel {
     private short[] data;
     private double scale = 1.0;
     private String name;
-    
+
     public StandardWaveModel(InputStream is, String name) throws IOException {
         this.name = name;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -48,7 +48,7 @@ public class StandardWaveModel implements IWaveModel {
     public int getSize() {
         return data.length;
     }
-    
+
     public int getValue(int offset) {
         return (int)(data[offset] * scale);
     }
@@ -60,7 +60,7 @@ public class StandardWaveModel implements IWaveModel {
             if (ofs > data.length-2 || ofs < 0) scaled[n] = 0;
             else {
                 int iofs = (int)ofs;
-                double i = ofs - iofs;
+//                double i = ofs - iofs;
                 scaled[n] = (int)((data[iofs] * scale));// * (1.0 - i) + data[iofs+1] * i) * scale) ;
             }
         }
@@ -70,7 +70,7 @@ public class StandardWaveModel implements IWaveModel {
     public double getScale() {
         return scale;
     }
-    
+
     public void setScale(double scale) {
         this.scale = scale;
     }

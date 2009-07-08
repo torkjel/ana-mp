@@ -9,6 +9,7 @@ import anakata.modplay.module.Module;
 import anakata.modplay.player.DefaultMixer;
 import anakata.modplay.player.FastMixer;
 import anakata.modplay.player.InterpolatingMixer;
+import anakata.modplay.player.LowLevelMixer;
 import anakata.modplay.player.Mixer;
 import anakata.modplay.player.ModuleState;
 import anakata.modplay.player.PlayerException;
@@ -29,7 +30,7 @@ public class Player {
 
     private ModuleState ms;
     private Output out;
-    private Class lowLevelMixerClass;
+    private Class<? extends LowLevelMixer> lowLevelMixerClass;
 
     public Player() {
     }

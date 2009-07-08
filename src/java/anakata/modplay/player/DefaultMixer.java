@@ -22,7 +22,7 @@ public class DefaultMixer extends AbstractMixer {
     private byte[] mixedData = new byte[44100 * 4 * 2];
 
     private Output output;
-    private Class lowLevelMixerClass;
+    private Class<? extends LowLevelMixer> lowLevelMixerClass;
 
     private Track[] tracks;
 
@@ -31,8 +31,8 @@ public class DefaultMixer extends AbstractMixer {
      * @param lowLevelMixerClass class who implements the LowLevelMixer interface
      * @param numberOfTracks the number of tracks this mixer should be able to mix
      */
-    public DefaultMixer(Output output, Class lowLevelMixerClass, int numberOfTracks) {
-    	super(numberOfTracks);
+    public DefaultMixer(Output output, Class<? extends LowLevelMixer> lowLevelMixerClass, int numberOfTracks) {
+        super(numberOfTracks);
         this.lowLevelMixerClass = lowLevelMixerClass;
         this.output = output;
         this.tracks = new Track[numberOfTracks];
@@ -45,10 +45,10 @@ public class DefaultMixer extends AbstractMixer {
             throws PlayerException {
         try {
             if (tracks[track] == null)
-                tracks[track] = new Track((LowLevelMixer)lowLevelMixerClass.newInstance(),
+                tracks[track] = new Track(lowLevelMixerClass.newInstance(),
                     sampleData, offset, rate, volume, panning, loopType, loopStart, looplength);
             else
-                tracks[track].init((LowLevelMixer)lowLevelMixerClass.newInstance(),
+                tracks[track].init(lowLevelMixerClass.newInstance(),
                     sampleData, offset, rate, volume, panning, loopType, loopStart, looplength);
         } catch (Exception e) {
             throw new PlayerException("Could not initialize track " + track, e);
@@ -82,10 +82,10 @@ public class DefaultMixer extends AbstractMixer {
      * @param data
      */
     private void mix(byte[] data, int len) {
-    	double separation = getSeparation();
-    	double balance = getBalance();
-    	int numberOfTracks = getNumberOfTracks();
-    	
+        double separation = getSeparation();
+        double balance = getBalance();
+        int numberOfTracks = getNumberOfTracks();
+
         int length = len / 4;
         for (int n = 0; n < numberOfTracks; n++)
             if (tracks[n] != null) {
